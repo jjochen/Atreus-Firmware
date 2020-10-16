@@ -45,7 +45,7 @@ KEYMAPS(
 
                                ,Key_6                ,Key_7                    ,Key_8                    ,Key_9          ,Key_0
                                ,Key_LeftArrow        ,Key_DownArrow            ,Key_UpArrow              ,Key_RightArrow ,Key_Quote
-      ,Consumer_PlaySlashPause ,JJ_NextPreviousTrack ,Consumer_VolumeDecrement ,Consumer_VolumeIncrement ,___            ,Key_Equals
+      ,Consumer_PlaySlashPause ,JJ_NextPreviousTrack ,Consumer_VolumeDecrement ,Consumer_VolumeIncrement ,Key_Period     ,Key_Equals
       ,___                     ,___                  ,___                      ,___                      ,___            ,___
    ),
 
