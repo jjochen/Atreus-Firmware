@@ -2,15 +2,10 @@
 
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Macros.h>
-#include <Kaleidoscope-Config-Macros.h>
 #include <Kaleidoscope-TapDance.h>
-#include <Kaleidoscope-Config-TapDance.h>
 #include <Kaleidoscope-OneShot.h>
 #include <Kaleidoscope-Escape-OneShot.h>
-#include <Kaleidoscope-Config-OneShot.h>
-#include <Kaleidoscope-LangPack-German.h>
 #include <Kaleidoscope-Xcode-Shortcuts.h>
-
 
 
 enum {
@@ -20,6 +15,37 @@ enum {
   EDIT,
   SHORTCUTS,
 };
+
+enum {
+  MACRO_VERSION_INFO,
+  MACRO_SLEEP,
+  MACRO_LOCK,
+  MACRO_AUMLAUT,
+  MACRO_OUMLAUT,
+  MACRO_UUMLAUT,
+  MACRO_ESZETT,
+  MACRO_XCODE_SELECT_TO_MARK,
+  MACRO_XCODE_SWAP_WITH_MARK,
+};
+
+enum {
+  TAP_DANCE_NEXT_TRACK,
+  TAP_DANCE_XCODE_FIND,
+  TAP_DANCE_XCODE_FIND_AND_REPLACE,
+  TAP_DANCE_XCODE_COPY_OR_CUT,
+};
+
+
+#define Key_AUmlaut M(MACRO_AUMLAUT) // Ä/ä
+#define Key_OUmlaut M(MACRO_OUMLAUT) // Ö/ö
+#define Key_UUmlaut M(MACRO_UUMLAUT) // Ü/ü
+#define Key_Eszett  M(MACRO_ESZETT)  // ß
+
+#define JJ_NextPreviousTrack TD(TAP_DANCE_NEXT_TRACK)
+#define Key_XcodeFind TD(TAP_DANCE_XCODE_FIND)
+#define Key_XcodeFindAndReplace TD(TAP_DANCE_XCODE_FIND_AND_REPLACE)
+#define Key_XcodeCopyOrCut TD(TAP_DANCE_XCODE_COPY_OR_CUT)
+
 
 /* *INDENT-OFF* */
 KEYMAPS(
@@ -90,22 +116,159 @@ KEYMAPS(
 )
 /* *INDENT-ON* */
 
+
 KALEIDOSCOPE_INIT_PLUGINS(
   OneShot,
   EscapeOneShot,
   Macros,
-  TapDance,
-  German
+  TapDance
 );
 
 void setup() {
   Kaleidoscope.setup();
 
-  jj::Macros::configure();
-  jj::TapDance::configure();
-  jj::OneShot::configure();
+  OneShot.enableStickablity();
+  OneShot.setTimeout(2500);
+  OneShot.setHoldTimeout(250);
+  OneShot.setDoubleTapTimeout(250);
 }
 
 void loop() {
   Kaleidoscope.loop();
+}
+
+
+namespace jj {
+namespace config {
+
+#ifndef BUILD_INFORMATION
+#define BUILD_INFORMATION "locally built on " __DATE__ " at " __TIME__
+#endif
+
+static void typeVersionInfo(KeyEvent &event) {
+  if (!keyToggledOn(event.state)) {
+    return;
+  }
+
+  ::Macros.type(PSTR("Kaleidoscope "));
+  ::Macros.type(PSTR(BUILD_INFORMATION));
+}
+
+static void lockMac(KeyEvent &event) {
+  if (!keyToggledOn(event.state)) {
+    return;
+  }
+  ::Macros.play(MACRO(Tr(LCTRL(LGUI(Key_Q)))));
+}
+
+static void sleepMac(KeyEvent &event) {
+  if (!keyToggledOn(event.state)) {
+    return;
+  }
+  ::Macros.play(MACRO(Tr(LGUI(LALT(Consumer_Eject)))));
+}
+
+static void typeAUmlaut(KeyEvent &event) {
+  if (!keyToggledOn(event.state)) {
+    return;
+  }
+  ::Macros.release(Key_LeftShift); // TODO only if active
+  ::Macros.play(MACRO(Tr(LALT(Key_U)), Tr(Key_A)));
+  //::Macros.press(Key_LeftShift); // TODO reactivate LeftShift
+}
+
+static void typeOUmlaut(KeyEvent &event) {
+  if (!keyToggledOn(event.state)) {
+    return;
+  }
+  ::Macros.release(Key_LeftShift); // TODO only if active
+  ::Macros.play(MACRO(Tr(LALT(Key_U)), Tr(Key_O)));
+}
+
+static void typeUUmlaut(KeyEvent &event) {
+  if (!keyToggledOn(event.state)) {
+    return;
+  }
+  ::Macros.release(Key_LeftShift); // TODO only if active
+  ::Macros.play(MACRO(Tr(LALT(Key_U)), Tr(Key_U)));
+}
+
+static void typeEszett(KeyEvent &event) {
+  if (!keyToggledOn(event.state)) {
+    return;
+  }
+  ::Macros.play(MACRO(Tr(LALT(Key_S))));
+}
+
+static void xcodeSelectToMark(KeyEvent &event) {
+  if (!keyToggledOn(event.state)) {
+    return;
+  }
+  ::Macros.play(MACRO(Tr(LCTRL(Key_X)), Tr(LCTRL(Key_M))));
+}
+
+static void xcodeSwapWithMark(KeyEvent &event) {
+  if (!keyToggledOn(event.state)) {
+    return;
+  }
+  ::Macros.play(MACRO(Tr(LCTRL(Key_X)), Tr(LCTRL(Key_X))));
+}
+
+} // namespace config
+} // namespacce jj
+
+
+const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
+  switch (macro_id) {
+  case MACRO_VERSION_INFO:
+    jj::config::typeVersionInfo(event);
+    break;
+
+  case MACRO_SLEEP:
+    jj::config::sleepMac(event);
+    break;
+
+  case MACRO_LOCK:
+    jj::config::lockMac(event);
+    break;
+
+  case MACRO_AUMLAUT:
+    jj::config::typeAUmlaut(event);
+    break;
+
+  case MACRO_OUMLAUT:
+    jj::config::typeOUmlaut(event);
+    break;
+
+  case MACRO_UUMLAUT:
+    jj::config::typeUUmlaut(event);
+    break;
+
+  case MACRO_ESZETT:
+    jj::config::typeEszett(event);
+    break;
+
+  case MACRO_XCODE_SELECT_TO_MARK:
+    jj::config::xcodeSelectToMark(event);
+    break;
+
+  case MACRO_XCODE_SWAP_WITH_MARK:
+    jj::config::xcodeSwapWithMark(event);
+    break;
+
+  }
+  return MACRO_NONE;
+}
+
+void tapDanceAction(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count, kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {
+  switch (tap_dance_index) {
+  case TAP_DANCE_NEXT_TRACK:
+    return tapDanceActionKeys(tap_count, tap_dance_action, Consumer_ScanNextTrack, Consumer_ScanPreviousTrack);
+  case TAP_DANCE_XCODE_FIND:
+    return tapDanceActionKeys(tap_count, tap_dance_action, Key_XcodeFindInFile, Key_XcodeFindInWorkspace);
+  case TAP_DANCE_XCODE_FIND_AND_REPLACE:
+    return tapDanceActionKeys(tap_count, tap_dance_action, Key_XcodeFindAndReplaceInFile, Key_XcodeFindAndReplaceInWorkspace);
+  case TAP_DANCE_XCODE_COPY_OR_CUT:
+    return tapDanceActionKeys(tap_count, tap_dance_action, Key_XcodeCopy, Key_XcodeCut);
+  }
 }
