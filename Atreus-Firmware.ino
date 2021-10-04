@@ -5,6 +5,7 @@
 #include <Kaleidoscope-TapDance.h>
 #include <Kaleidoscope-OneShot.h>
 #include <Kaleidoscope-Escape-OneShot.h>
+#include <Kaleidoscope-LangPack-German.h>
 #include <Kaleidoscope-Xcode-Shortcuts.h>
 
 
@@ -14,15 +15,13 @@ enum {
   UPPER,
   EDIT,
   SHORTCUTS,
+  FF,
 };
 
 enum {
   MACRO_VERSION_INFO,
   MACRO_SLEEP,
   MACRO_LOCK,
-  MACRO_AUMLAUT,
-  MACRO_OUMLAUT,
-  MACRO_UUMLAUT,
   MACRO_ESZETT,
   MACRO_XCODE_SELECT_TO_MARK,
   MACRO_XCODE_SWAP_WITH_MARK,
@@ -36,12 +35,7 @@ enum {
 };
 
 
-#define Key_AUmlaut M(MACRO_AUMLAUT) // Ä/ä
-#define Key_OUmlaut M(MACRO_OUMLAUT) // Ö/ö
-#define Key_UUmlaut M(MACRO_UUMLAUT) // Ü/ü
-#define Key_Eszett  M(MACRO_ESZETT)  // ß
-
-#define JJ_NextPreviousTrack TD(TAP_DANCE_NEXT_TRACK)
+#define Key_NextPreviousTrack TD(TAP_DANCE_NEXT_TRACK)
 #define Key_XcodeFind TD(TAP_DANCE_XCODE_FIND)
 #define Key_XcodeFindAndReplace TD(TAP_DANCE_XCODE_FIND_AND_REPLACE)
 #define Key_XcodeCopyOrCut TD(TAP_DANCE_XCODE_COPY_OR_CUT)
@@ -69,10 +63,10 @@ KEYMAPS(
       ,___          ,Key_AUmlaut ,Key_OUmlaut ,Key_UUmlaut ,Key_PageDown ,___
       ,___          ,___         ,___         ,___         ,Key_Delete   ,___
 
-                               ,Key_6                ,Key_7                    ,Key_8                    ,Key_9          ,Key_0
-                               ,Key_LeftArrow        ,Key_DownArrow            ,Key_UpArrow              ,Key_RightArrow ,Key_Quote
-      ,Consumer_PlaySlashPause ,JJ_NextPreviousTrack ,Consumer_VolumeDecrement ,Consumer_VolumeIncrement ,Key_Period     ,Key_Equals
-      ,___                     ,___                  ,___                      ,___                      ,___            ,___
+                               ,Key_6                 ,Key_7                    ,Key_8                    ,Key_9          ,Key_0
+                               ,Key_LeftArrow         ,Key_DownArrow            ,Key_UpArrow              ,Key_RightArrow ,Key_Quote
+      ,Consumer_PlaySlashPause ,Key_NextPreviousTrack ,Consumer_VolumeDecrement ,Consumer_VolumeIncrement ,Key_Period     ,Key_Equals
+      ,___                     ,___                   ,___                      ,___                      ,___            ,___
    ),
 
   [UPPER] = KEYMAP_STACKED
@@ -80,7 +74,7 @@ KEYMAPS(
        LSHIFT(Key_1)        ,LSHIFT(Key_2) ,LSHIFT(Key_3) ,LSHIFT(Key_4) ,LSHIFT(Key_5)
       ,LSHIFT(Key_Backtick) ,___           ,___           ,___           ,___
       ,___                  ,___           ,___           ,___           ,___           ,___
-      ,LockLayer(EDIT)      ,___           ,___           ,___           ,Key_Delete    ,___
+      ,___                  ,___           ,___           ,___           ,Key_Delete    ,___
 
            ,LSHIFT(Key_6)        ,LSHIFT(Key_7)         ,LSHIFT(Key_8)   ,LSHIFT(Key_9)    ,LSHIFT(Key_0)
            ,Key_LeftCurlyBracket ,Key_RightCurlyBracket ,Key_LeftBracket ,Key_RightBracket ,LSHIFT(Key_Quote)
@@ -90,10 +84,10 @@ KEYMAPS(
 
   [EDIT] = KEYMAP_STACKED
   (
-       Key_Insert          ,Key_Home      ,Key_UpArrow   ,Key_End        ,___
-      ,___                 ,Key_LeftArrow ,Key_DownArrow ,Key_RightArrow ,Key_Enter
-      ,Key_Z               ,Key_X         ,Key_C         ,Key_V          ,Key_Space     ,Key_Tab
-      ,MoveToLayer(QWERTY) ,___           ,___           ,___            ,Key_Backspace ,___
+       Key_Insert ,Key_Home      ,Key_UpArrow   ,Key_End        ,___
+      ,___        ,Key_LeftArrow ,Key_DownArrow ,Key_RightArrow ,Key_Enter
+      ,Key_Z      ,Key_X         ,Key_C         ,Key_V          ,Key_Space     ,Key_Tab
+      ,___        ,___           ,___           ,___            ,Key_Backspace ,___
 
            ,___ ,___ ,___ ,___ ,___
            ,___ ,___ ,___ ,___ ,___
@@ -111,7 +105,20 @@ KEYMAPS(
                            ,Key_XcodeRevealInProjectNavigator ,Key_XcodeRevealInDebugNavigator            ,XXX                            ,Key_XcodeOpenQuickly  ,Key_XcodeUppercaseWord
                            ,Key_XcodeGoBack                   ,Key_XcodeJumpToNextCounterpartInNextEditor ,Key_XcodeJumpToNextCounterpart ,Key_XcodeGoForward    ,Key_XcodeCapitalizeWord
       ,Key_XcodeAssistant  ,Key_XcodeRefactorRename           ,Key_XcodeRefactorExtractToMethod           ,Key_XcodeMoveLineUp            ,Key_XcodeMoveLineDown ,Key_XcodeLowercaseWord
-      ,LALT(LSHIFT(Key_M)) ,___                               ,Key_NonUsBackslashAndPipe                  ,___                            ,___                   ,Key_XcodeJumpToNextChange
+      ,LALT(LSHIFT(Key_M)) ,OSL(FF)                           ,Key_NonUsBackslashAndPipe                  ,___                            ,___                   ,Key_XcodeJumpToNextChange
+   ),
+
+  [FF] = KEYMAP_STACKED
+  (
+       Key_F1 ,Key_F2 ,Key_F3 ,Key_F4 ,Key_F5 
+      ,___    ,___    ,___    ,___    ,___
+      ,___    ,___    ,___    ,___    ,___    ,___
+      ,___    ,___    ,___    ,___    ,___    ,___
+
+                     ,Key_F6 ,Key_F7 ,Key_F8 ,Key_F9 ,Key_F10
+                     ,___    ,___    ,___    ,___    ,Key_F11
+      ,___           ,___    ,___    ,___    ,___    ,Key_F12
+      ,M(MACRO_LOCK) ,___    ,___    ,___    ,___    ,___
    ),
 )
 /* *INDENT-ON* */
@@ -121,13 +128,14 @@ KALEIDOSCOPE_INIT_PLUGINS(
   OneShot,
   EscapeOneShot,
   Macros,
-  TapDance
+  TapDance,
+  German
 );
 
 void setup() {
   Kaleidoscope.setup();
 
-  OneShot.enableStickablity();
+  //OneShot.enableStickablity();
   OneShot.setTimeout(2500);
   OneShot.setHoldTimeout(250);
   OneShot.setDoubleTapTimeout(250);
@@ -138,7 +146,7 @@ void loop() {
 }
 
 
-namespace jj {
+namespace kaleidoscope {
 namespace config {
 
 #ifndef BUILD_INFORMATION
@@ -168,38 +176,6 @@ static void sleepMac(KeyEvent &event) {
   ::Macros.play(MACRO(Tr(LGUI(LALT(Consumer_Eject)))));
 }
 
-static void typeAUmlaut(KeyEvent &event) {
-  if (!keyToggledOn(event.state)) {
-    return;
-  }
-  ::Macros.release(Key_LeftShift); // TODO only if active
-  ::Macros.play(MACRO(Tr(LALT(Key_U)), Tr(Key_A)));
-  //::Macros.press(Key_LeftShift); // TODO reactivate LeftShift
-}
-
-static void typeOUmlaut(KeyEvent &event) {
-  if (!keyToggledOn(event.state)) {
-    return;
-  }
-  ::Macros.release(Key_LeftShift); // TODO only if active
-  ::Macros.play(MACRO(Tr(LALT(Key_U)), Tr(Key_O)));
-}
-
-static void typeUUmlaut(KeyEvent &event) {
-  if (!keyToggledOn(event.state)) {
-    return;
-  }
-  ::Macros.release(Key_LeftShift); // TODO only if active
-  ::Macros.play(MACRO(Tr(LALT(Key_U)), Tr(Key_U)));
-}
-
-static void typeEszett(KeyEvent &event) {
-  if (!keyToggledOn(event.state)) {
-    return;
-  }
-  ::Macros.play(MACRO(Tr(LALT(Key_S))));
-}
-
 static void xcodeSelectToMark(KeyEvent &event) {
   if (!keyToggledOn(event.state)) {
     return;
@@ -215,45 +191,29 @@ static void xcodeSwapWithMark(KeyEvent &event) {
 }
 
 } // namespace config
-} // namespacce jj
+} // namespacce kaleidoscope
 
 
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
   switch (macro_id) {
   case MACRO_VERSION_INFO:
-    jj::config::typeVersionInfo(event);
+    kaleidoscope::config::typeVersionInfo(event);
     break;
 
   case MACRO_SLEEP:
-    jj::config::sleepMac(event);
+    kaleidoscope::config::sleepMac(event);
     break;
 
   case MACRO_LOCK:
-    jj::config::lockMac(event);
-    break;
-
-  case MACRO_AUMLAUT:
-    jj::config::typeAUmlaut(event);
-    break;
-
-  case MACRO_OUMLAUT:
-    jj::config::typeOUmlaut(event);
-    break;
-
-  case MACRO_UUMLAUT:
-    jj::config::typeUUmlaut(event);
-    break;
-
-  case MACRO_ESZETT:
-    jj::config::typeEszett(event);
+    kaleidoscope::config::lockMac(event);
     break;
 
   case MACRO_XCODE_SELECT_TO_MARK:
-    jj::config::xcodeSelectToMark(event);
+    kaleidoscope::config::xcodeSelectToMark(event);
     break;
 
   case MACRO_XCODE_SWAP_WITH_MARK:
-    jj::config::xcodeSwapWithMark(event);
+    kaleidoscope::config::xcodeSwapWithMark(event);
     break;
 
   }
